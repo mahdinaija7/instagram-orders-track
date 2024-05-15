@@ -30,3 +30,6 @@ To get started with the project, follow these steps:
 5. Start the Django development server using `python manage.py runserver`.
 6. Navigate to the `frontend` directory and start the React development server using `npm start`.
 7. Visit `http://localhost:3000` in your web browser to view the application.
+
+
+![Example Image](panel.png)
