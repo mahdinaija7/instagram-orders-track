@@ -2,6 +2,8 @@
 
 Welcome to Instagram Order Management! This project is designed to help you manage orders that come from Instagram.
 
+![Example Image](panel.png)
+
 ## Features
 
 - Add new orders
@@ -32,4 +34,3 @@ To get started with the project, follow these steps:
 7. Visit `http://localhost:3000` in your web browser to view the application.
 
 
-![Example Image](panel.png)
