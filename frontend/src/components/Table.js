@@ -17,7 +17,7 @@ function Table(props) {
         "price": ""
     });
     const { data, fetchOrders } = props;
-
+    const [searchedVal, setSearchedVal] = useState("");
 
 
     const [show, setShow] = useState(false);
@@ -142,7 +142,7 @@ function Table(props) {
                                             <input type="date" name="rechercheDate" id="rechercheDate" value="" className="form-control inputRechercheDate" min="2021-01-01" max="2024-04-28" />
                                         </th>
                                         <th>
-                                            <input type="text" value="" name="rechercheClient" id="rechercheClient" className="form-control inputRecherche" />
+                                            <input type="text" value={searchedVal} name="rechercheClient" onChange={(e) => setSearchedVal(e.target.value)} id="rechercheClient" className="form-control inputRecherche" />
                                         </th>
                                         <th>
                                             <input type="text" value="" name="rechercheNumTel" id="rechercheNumTel" className="form-control inputRecherche" />
@@ -208,8 +208,11 @@ function Table(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-    {data.sort((a, b) => b.id - a.id).map((object, i) => <TableRow rowData={object} key={i} />)}
-</tbody>
+
+                                    {data.filter(row => { return !searchedVal.length || row.client_full_name.toString().toLowerCase().includes(searchedVal.toString().toLowerCase())}).sort((a, b) => b.id - a.id)
+                                        .map((object, i) => <TableRow rowData={object} key={i} />)}
+
+                                </tbody>
                             </table>
                         </div>
                     </div>
