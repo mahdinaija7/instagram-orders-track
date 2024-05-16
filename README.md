@@ -8,7 +8,7 @@ Welcome to Instagram Order Management! This project is designed to help you mana
 
 - Add new orders
 - Edit existing orders
-- Delete orders (not yet )
+- Delete orders
 - View order details
 - Manage client information
 - Track order status

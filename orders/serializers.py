@@ -26,5 +26,25 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def update(self,instance,validated_data):
         client_data = validated_data.pop("client")
+        print(client_data)
+        Client.objects.filter(id=instance.client.id).update(**client_data)
+        Order.objects.filter(id=instance.id).update(**validated_data)
+
+        instance.refresh_from_db()
+        return instance
+    
+    def create(self, validated_data):
+        client_data = validated_data.pop("client")
+        client_name = client_data.get("full_name")
+        client_phone_number = client_data.get("phone_number")
+        client_exist = Client.objects.filter(full_name=client_name,phone_number=client_phone_number)
+        if client_exist:
+            order_instance = Order.objects.create(client=client_exist.first(),**validated_data)
+        else:
+            client_instance = Client.objects.create(**client_data)
+            order_instance = Order.objects.create(client=client_instance,**validated_data)
+
+        return order_instance
+    
         
 

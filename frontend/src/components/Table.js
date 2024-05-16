@@ -1,11 +1,11 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import NewOrderModal from './NewOrderModal';
-import EditOrderModal from './fonts/EditOrderModal';
+import EditOrderModal from './EditOrderModal';
 import axios from 'axios';
 
 function Table(props) {
 
-    const [dataToEdit,setDataToEdit] = useState({
+    const [dataToEdit, setDataToEdit] = useState({
         "id": "",
         "client": "",
         "client_full_name": "",
@@ -21,7 +21,7 @@ function Table(props) {
 
 
     const [show, setShow] = useState(false);
-    
+
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -31,21 +31,34 @@ function Table(props) {
     const handleEditModalClose = () => setEditModalShow(false);
     const handleEditModalShow = () => setEditModalShow(true);
 
-    const editOrder = async (event)=>{
+    const editOrder = async (event) => {
         event.preventDefault();
         const orderId = event.currentTarget.id;
-        const order_url = `http://127.0.0.1:8000/orders/${orderId}` 
+        const order_url = `http://127.0.0.1:8000/orders/${orderId}`
         try {
-          let response = await axios.get(order_url);
-          console.log(response.data)
-          setDataToEdit(response.data);
-          console.log(dataToEdit)
-          handleEditModalShow()
-        }catch (error){
-          console.log(error)
+            let response = await axios.get(order_url);
+            console.log(response.data)
+            setDataToEdit(response.data);
+            console.log(dataToEdit)
+            handleEditModalShow()
+        } catch (error) {
+            console.log(error)
         }
-       
 
+
+    }
+
+    const deleteOrder = async (orderId) => {
+
+        const order_url = `http://127.0.0.1:8000/orders/${orderId}`
+        axios.delete(order_url)
+            .then(response => {
+                console.log(`Deleted post with ID ${orderId}`);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        fetchOrders()
     }
 
 
@@ -58,7 +71,7 @@ function Table(props) {
             <>
 
                 <tr className="row1">
-                    <td  align="left" width="120px">{data ? rowData.id : ""}</td>
+                    <td align="left" width="120px">{data ? rowData.id : ""}</td>
                     <td align="left" width="140px">{data ? rowData.date : ""}</td>
                     <td align="left">{data ? rowData.client_full_name : ""}</td>
                     <td align="left">{data ? rowData.client_phone_number : ""}</td>
@@ -69,15 +82,18 @@ function Table(props) {
                     <td align="left">{data ? rowData.product_names : ""}</td>
                     <td align="right">{rowData.price}</td>
                     <td width="100" align="center">
-                        <span className="badge badge-pill badge-danger" style={{ backgroundColor: rowData.status == 'DELIVERED' || rowData.status == 'PAID' ? 'green' : rowData.status == 'FULFILED' ? '#777777' : rowData.status == 'RETURNED' ? 'red' : 'orange'  }}>{data ? rowData.status : ""}</span>
+                        <span className="badge badge-pill badge-danger" style={{ backgroundColor: rowData.status == 'DELIVERED' || rowData.status == 'PAID' ? 'green' : rowData.status == 'FULFILED' ? '#777777' : rowData.status == 'RETURNED' ? 'red' : 'orange' }}>{data ? rowData.status : ""}</span>
                     </td>
                     <td width="140">
-                        <button  id={rowData.id} onClick={editOrder} target="_blank" className="mb-xs mt-xs mr-xs btn btn-primary" style={{ padding: '3px 5px', fontSize: '13px' }}>
+                        <button id={rowData.id} onClick={editOrder} target="_blank" className="mb-xs mt-xs mr-xs btn btn-primary" style={{ padding: '3px 5px', fontSize: '13px' }}>
                             Edit
                         </button>
                         <a target="_blank" className="mb-xs mt-xs mr-xs btn " style={{ color: 'white', backgroundColor: 'orange', padding: '3px 5px', fontSize: '13px' }}>
                             Preview
                         </a>
+                        <button onClick={() => deleteOrder(rowData.id)} target="_blank" className="mb-xs mt-xs mr-xs btn btn-primary" style={{ padding: '3px 5px', fontSize: '13px' }}>
+                            Delete
+                        </button>
                     </td>
                 </tr>
             </>
@@ -192,8 +208,8 @@ function Table(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {data.map((object, i) => <TableRow rowData={object} key={i} />)}
-                                </tbody>
+    {data.sort((a, b) => b.id - a.id).map((object, i) => <TableRow rowData={object} key={i} />)}
+</tbody>
                             </table>
                         </div>
                     </div>

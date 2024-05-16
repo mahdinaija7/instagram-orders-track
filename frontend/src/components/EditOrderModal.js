@@ -18,36 +18,45 @@ const EditOrderModal = (props) => {
   const submitEditedOrder = async (event) =>{
     event.preventDefault();
     const order_id = data ? data.id:"";
-    const client_id = data.client
+    const client_id = data.client.id
     const edit_url = `http://127.0.0.1:8000/orders/${client_id}`
     const full_name = clientFullNameRef.current.value;
     const phoneNumber = numberRef.current.value;
     const date = dateRef.current.value;
     const city = cityRef.current.value;
+    const address = adressRef.current.value;
     const istagramId = clientInstgRef.current.value;
     const productsNames = productsRef.current.value;
     const status = statusRef.current.value;
     const price = priceRef.current.value;
 
+
     const newOrderData = {
+      id:order_id,
+      client: {
+          id: client_id, 
+          full_name: full_name,
+          address: address,  
+          phone_number: phoneNumber,
+          city: city,
+          instagram_profile_id: istagramId 
+      },
+      date: date,
+      product_names: productsNames,
+      status: status,
+      price: price
+  }
 
 
-        "id": order_id,
-        "client": client_id,
-        "client_full_name": full_name,
-        "client_order_city": city,
-        "client_phone_number": phoneNumber,
-        "date": date,
-        "product_names": productsNames,
-        "status": status,
-        "price": price,
-    }
+  
+
     console.log(newOrderData)
 
 
     try {
       const orderResponse = await axios.put(edit_url, newOrderData);
       console.log("Order Changed" );
+      console.log(orderResponse.data)
       fetchOrders();
       handleClose()
     } catch (error) {
@@ -57,6 +66,8 @@ const EditOrderModal = (props) => {
 
 
   }
+
+  
 
 
   

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const NewOrderModal = (props) => {
 
-  const {fetchOrders,show, handleClose} = props;
+  const { fetchOrders, show, handleClose } = props;
 
   const clientFullNameRef = useRef(null);
   const numberRef = useRef(null);
@@ -23,12 +23,12 @@ const NewOrderModal = (props) => {
 
   const createNewOrder = async (event) => {
     event.preventDefault();
-    const client_url = 'http://127.0.0.1:8000/clients/';
     const order_url = 'http://127.0.0.1:8000/orders/'
     const full_name = clientFullNameRef.current.value;
     const phoneNumber = numberRef.current.value;
     const date = dateRef.current.value;
     const city = cityRef.current.value;
+    const address = adressRef.current.value;
     const istagramId = clientInstgRef.current.value;
     const productsNames = productsRef.current.value;
     const status = statusRef.current.value;
@@ -42,36 +42,32 @@ const NewOrderModal = (props) => {
       "instagram_profile_id": istagramId
     }
 
-    try {
-      const response = await axios.post(client_url, clientData);
-      const clientId = response.data.id;
-      
-      const orderData = {
-        "client": clientId,
-        "client_full_name": full_name,
-        "client_order_city": city,
-        "client_phone_number": phoneNumber,
-        "date": date,
-        "product_names": productsNames,
-        "status": status,
-        "price": price
-      }
 
-      try {
+    const newOrderData = {
 
-        console.log(orderData);
-        const orderResponse = await axios.post(order_url, orderData);
-        console.log("Order Created" );
-        fetchOrders();
-      } catch (error) {
-        console.log("Error creating Order");
-      }
+      client: {
+        full_name: full_name,
+        address: address,
+        phone_number: phoneNumber,
+        city: city,
+        instagram_profile_id: istagramId
+      },
+      date: date,
+      product_names: productsNames,
+      status: status,
+      price: price
 
 
-    } catch (error) {
-      console.error('Error creating Client');
     }
 
+    try {
+      const orderResponse = await axios.post(order_url, newOrderData);
+      console.log("Order Created");
+      console.log(orderResponse)
+      fetchOrders();
+    } catch (error) {
+      console.log("Error creating Order");
+    }
 
 
 
@@ -112,7 +108,7 @@ const NewOrderModal = (props) => {
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="client_full_name">Client Full Name</label>
-                      <input type="text" ref={clientFullNameRef} name="client_full_name"  class="form-control" id="client_full_name" placeholder="Full Name" required />
+                      <input type="text" ref={clientFullNameRef} name="client_full_name" class="form-control" id="client_full_name" placeholder="Full Name" required />
                     </div>
                     <div class="form-group col-md-6">
                       <label for="phone">Telephone Number</label>
@@ -170,7 +166,7 @@ const NewOrderModal = (props) => {
                   <div class="form-row">
                     <div class="form-group col-md-4">
                       <label for="exampleDate">Select Date:</label>
-                      <input ref={dateRef} name="date" type="date" class="form-control" id="date" required/>
+                      <input ref={dateRef} name="date" type="date" class="form-control" id="date" required />
                     </div>
                     <div class="form-group col-md-4">
                       <label for="client_full_name">Client Instagram ID</label>
