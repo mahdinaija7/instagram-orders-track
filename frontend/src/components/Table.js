@@ -18,6 +18,12 @@ function Table(props) {
     });
     const { data, fetchOrders } = props;
     const [searchedVal, setSearchedVal] = useState("");
+    const [searchDateVal, setSearchDateVal] = useState('');
+    const [searchPhoneVal, setSearchPhoneVal] = useState('');
+    const [searchStatusVal, setSearchStatusVal] = useState('');
+    const [searchCityVal, setSearchCityVal] = useState('');
+
+
 
 
     const [show, setShow] = useState(false);
@@ -139,16 +145,16 @@ function Table(props) {
                                             <input type="text" value="" name="rechercheCode" id="rechercheCode" className="form-control inputRecherche" />
                                         </th>
                                         <th>
-                                            <input type="date" name="rechercheDate" id="rechercheDate" value="" className="form-control inputRechercheDate" min="2021-01-01" max="2024-04-28" />
+                                            <input type="date"  value={searchDateVal}  onChange={(e)=> setSearchDateVal(e.target.value)} name="rechercheDate" id="rechercheDate"className="form-control inputRechercheDate" min="2021-01-01" max="2024-04-28" />
                                         </th>
                                         <th>
                                             <input type="text" value={searchedVal} name="rechercheClient" onChange={(e) => setSearchedVal(e.target.value)} id="rechercheClient" className="form-control inputRecherche" />
                                         </th>
                                         <th>
-                                            <input type="text" value="" name="rechercheNumTel" id="rechercheNumTel" className="form-control inputRecherche" />
+                                            <input type="text" value={searchPhoneVal} onChange={(e)=> setSearchPhoneVal(e.target.value)} name="rechercheNumTel" id="rechercheNumTel" className="form-control inputRecherche" />
                                         </th>
                                         <th>
-                                            <select className="form-control" name="rechercheAdresse" id="rechercheAdresse" style={{ height: '28px', padding: '0px 0px 0px 3px', fontWeight: 'normal' }}>
+                                            <select onChange={(e)=>setSearchCityVal(e.target.value)} className="form-control" name="rechercheAdresse" id="rechercheAdresse" style={{ height: '28px', padding: '0px 0px 0px 3px', fontWeight: 'normal' }}>
                                                 <option value="">Toute la tunisie</option>
                                                 <option value="Ariana">Ariana</option>
                                                 <option value="Beja">Beja</option>
@@ -190,12 +196,12 @@ function Table(props) {
                                             </div>
                                         </th>
                                         <th>
-                                            <select className="form-control inputRechercheList" name="rechercheEtat" id="rechercheEtat">
+                                            <select  onChange={(e)=>{setSearchStatusVal(e.target.value)}} className="form-control inputRechercheList" name="rechercheEtat" id="rechercheEtat">
                                                 <option value="">-</option>
-                                                <option value="0">Unfulfilled</option>
-                                                <option value="1">Fulfilled</option>
-                                                <option value="2">Delivered</option>
-                                                <option value="3">Returned</option>
+                                                <option value="INFULFILED">INFULFILED</option>
+                                                <option value="FULFILED">FULFILED</option>
+                                                <option value="DELIVERED">DELIVERED</option>
+                                                <option value="RETURNED">RETURNED</option>
                                             </select>
                                         </th>
                                         <th>
@@ -209,7 +215,14 @@ function Table(props) {
                                 </thead>
                                 <tbody>
 
-                                    {data.filter(row => { return !searchedVal.length || row.client_full_name.toString().toLowerCase().includes(searchedVal.toString().toLowerCase())}).sort((a, b) => b.id - a.id)
+                                    {data.filter(row => {
+                                        const client_nameSearch = !searchedVal.length || row.client_full_name.toString().toLowerCase().includes(searchedVal.toString().toLowerCase());
+                                        const dateSearch = !searchDateVal.length || row.date === searchDateVal;
+                                        const phoneSearch = !searchPhoneVal.length || row.client_phone_number.toString().toLowerCase().includes(searchPhoneVal.toString().toLowerCase());
+                                        const statusSearch = !searchStatusVal.length || row.status.toString().toLowerCase() == searchStatusVal.toString().toLowerCase()
+                                        const citySearch =  !searchCityVal.length || row.client_order_city.toString().toLowerCase() == searchCityVal.toString().toLowerCase()
+                                        return dateSearch && client_nameSearch && phoneSearch && statusSearch && citySearch
+                                     }).sort((a, b) => b.id - a.id)
                                         .map((object, i) => <TableRow rowData={object} key={i} />)}
 
                                 </tbody>
